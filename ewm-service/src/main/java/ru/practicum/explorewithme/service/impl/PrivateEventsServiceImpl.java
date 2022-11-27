@@ -47,27 +47,17 @@ public class PrivateEventsServiceImpl implements PrivateEventsService {
     @Override
     public EventFullDto updateUserEvent(Long userId, UpdateEventRequest updateEventRequest) {
         findUser(userId);
+
         Event event = findEvent(updateEventRequest.getEventId());
-        if (updateEventRequest.getCategoryId() != null) {
-            event.setCategory(findCategory(updateEventRequest.getCategoryId()));
-        }
-        event.setEventDate(DateHelper.parseDateTime(updateEventRequest.getEventDate()));
-        if (updateEventRequest.getAnnotation() != null) {
-            event.setAnnotation(updateEventRequest.getAnnotation());
-        }
-        if (updateEventRequest.getDescription() != null) {
-            event.setDescription(updateEventRequest.getDescription());
-        }
-        if (updateEventRequest.getPaid() != null) {
-            event.setPaid(updateEventRequest.getPaid());
-        }
-        if (updateEventRequest.getParticipantLimit() != null) {
-            event.setParticipantLimit(updateEventRequest.getParticipantLimit());
-        }
-        if (updateEventRequest.getTitle() != null) {
-            event.setTitle(updateEventRequest.getTitle());
-        }
+        updateEventRequest.getCategoryId().ifPresent(s -> event.setCategory(findCategory(s)));
+        updateEventRequest.getEventDate().ifPresent(s -> event.setEventDate(DateHelper.parseDateTime(s)));
+        updateEventRequest.getAnnotation().ifPresent(event::setAnnotation);
+        updateEventRequest.getDescription().ifPresent(event::setDescription);
+        updateEventRequest.getPaid().ifPresent(event::setPaid);
+        updateEventRequest.getParticipantLimit().ifPresent(event::setParticipantLimit);
+        updateEventRequest.getTitle().ifPresent(event::setTitle);
         event.setState(PENDING);
+
         EventFullDto eventFullDto = EventMapper.toEventFullDto(eventsRepository.save(event));
         log.info("Event id={} edited by user id={}", eventFullDto.getId(), userId);
         return eventFullDto;
@@ -105,6 +95,7 @@ public class PrivateEventsServiceImpl implements PrivateEventsService {
         return eventFullDto;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ParticipationRequestDto> getUserEventRequestsById(Long userId, Long eventId) {
         List<ParticipationRequest> participationRequestList = requestsRepository
@@ -144,24 +135,24 @@ public class PrivateEventsServiceImpl implements PrivateEventsService {
     private Event findEvent(Long id) {
         return eventsRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException(MessageFormat.format("{0}{1}", COMPILATION_NOT_FOUND_MESSAGE, id)));
+                .orElseThrow(() -> new NotFoundException(MessageFormat.format(PATTERN_TWO_ARGS, COMPILATION_NOT_FOUND_MESSAGE, id)));
     }
 
     private User findUser(Long id) {
         return usersRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException(MessageFormat.format("{0}{1}", USER_NOT_FOUND_MESSAGE, id)));
+                .orElseThrow(() -> new NotFoundException(MessageFormat.format(PATTERN_TWO_ARGS, USER_NOT_FOUND_MESSAGE, id)));
     }
 
     private Category findCategory(Long id) {
         return categoriesRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException(MessageFormat.format("{0}{1}", CATEGORY_NOT_FOUND_MESSAGE, id)));
+                .orElseThrow(() -> new NotFoundException(MessageFormat.format(PATTERN_TWO_ARGS, CATEGORY_NOT_FOUND_MESSAGE, id)));
     }
 
     private ParticipationRequest findRequest(Long id) {
         return requestsRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException(MessageFormat.format("{0}{1}", REQUEST_NOT_FOUND_MESSAGE, id)));
+                .orElseThrow(() -> new NotFoundException(MessageFormat.format(PATTERN_TWO_ARGS, REQUEST_NOT_FOUND_MESSAGE, id)));
     }
 }

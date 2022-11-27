@@ -9,7 +9,7 @@ import ru.practicum.explorewithme.service.PublicCategoriesService;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/categories")
+@RequestMapping("/categories")
 @Slf4j
 @RequiredArgsConstructor
 public class PublicCategoriesController {

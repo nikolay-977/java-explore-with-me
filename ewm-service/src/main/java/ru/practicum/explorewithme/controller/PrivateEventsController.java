@@ -10,7 +10,7 @@ import ru.practicum.explorewithme.service.PrivateEventsService;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/users/{userId}/events")
+@RequestMapping("/users/{userId}/events")
 @Slf4j
 @RequiredArgsConstructor
 public class PrivateEventsController {

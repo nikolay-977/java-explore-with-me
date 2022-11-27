@@ -14,7 +14,7 @@ public class ErrorHandler {
     public ErrorResponse handleNotFoundException(final NotFoundException e) {
         return ErrorResponse.builder()
                 .errorMessage(e.getMessage())
-                .status(HttpStatus.NOT_FOUND.value())
+                .statusCode(HttpStatus.NOT_FOUND.value())
                 .build();
     }
 
@@ -23,7 +23,7 @@ public class ErrorHandler {
     public ErrorResponse handleBadRequestException(final BadRequestException e) {
         return ErrorResponse.builder()
                 .errorMessage(e.getMessage())
-                .status(HttpStatus.BAD_REQUEST.value())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .build();
     }
 
@@ -32,7 +32,7 @@ public class ErrorHandler {
     public ErrorResponse handleBadRequestException(final IllegalArgumentException e) {
         return ErrorResponse.builder()
                 .errorMessage(e.getMessage())
-                .status(HttpStatus.BAD_REQUEST.value())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .build();
     }
 
@@ -41,7 +41,7 @@ public class ErrorHandler {
     public ErrorResponse handleBadRequestException(final PropertyValueException e) {
         return ErrorResponse.builder()
                 .errorMessage(e.getMessage())
-                .status(HttpStatus.BAD_REQUEST.value())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .build();
     }
 
@@ -50,7 +50,7 @@ public class ErrorHandler {
     public ErrorResponse handleForbiddenException(final ForbiddenException e) {
         return ErrorResponse.builder()
                 .errorMessage(e.getMessage())
-                .status(HttpStatus.FORBIDDEN.value())
+                .statusCode(HttpStatus.FORBIDDEN.value())
                 .build();
     }
 
@@ -59,7 +59,7 @@ public class ErrorHandler {
     public ErrorResponse handleBadRequestException(final ConstraintViolationException e) {
         return ErrorResponse.builder()
                 .errorMessage(e.getMessage())
-                .status(HttpStatus.CONFLICT.value())
+                .statusCode(HttpStatus.CONFLICT.value())
                 .build();
     }
 }

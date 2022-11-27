@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CategoryMapper {
+
+    private CategoryMapper() {
+    }
+
     public static Category toCategory(CategoryDto categoryDto) {
         return Category.builder()
                 .id(categoryDto.getId())

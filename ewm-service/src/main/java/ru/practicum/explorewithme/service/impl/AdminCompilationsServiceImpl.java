@@ -35,9 +35,7 @@ public class AdminCompilationsServiceImpl implements AdminCompilationsService {
         Set<Event> events = new HashSet<>();
 
         if (!newCompilationDto.getEventIdList().isEmpty()) {
-            for (Long id : newCompilationDto.getEventIdList()) {
-                events.add(eventsRepository.findById(id).get());
-            }
+            events.addAll(eventsRepository.findEventsByIdIn(newCompilationDto.getEventIdList()));
         }
 
         CompilationDto compilationDto = CompilationMapper

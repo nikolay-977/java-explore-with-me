@@ -47,34 +47,26 @@ public class AdminEventsServiceImpl implements AdminEventsService {
                                         Integer from,
                                         Integer size) {
         List<Event> eventsList;
-        List<State> stateList;
         final Pageable pageable = CustomPageRequest.of(from, size);
 
-        if (states == null && rangeStart == null && rangeEnd == null) {
-            eventsList = eventsRepository
-                    .searchEventsByInitiatorsAndCategories(
-                            users,
-                            categories,
-                            pageable);
-        } else {
-            stateList = states.stream()
-                    .map(State::valueOf)
-                    .collect(Collectors.toList());
-
-            eventsList = eventsRepository
-                    .searchEventsByAdminAndStatesAndCategoriesAndRange(
-                            users,
-                            stateList,
-                            categories,
-                            parseDateTime(rangeStart),
-                            parseDateTime(rangeEnd), pageable);
-        }
+        eventsList = (states == null && rangeStart == null && rangeEnd == null)
+                ? eventsRepository.searchEventsByInitiatorsAndCategories(users, categories, pageable)
+                : eventsRepository.searchEventsByAdminAndStatesAndCategoriesAndRange(
+                users,
+                states.stream()
+                        .map(State::valueOf)
+                        .collect(Collectors.toList()),
+                categories,
+                parseDateTime(rangeStart),
+                parseDateTime(rangeEnd),
+                pageable);
 
         if (eventsList.isEmpty()) {
             throw new NotFoundException(EVENTS_NOT_FOUND_MESSAGE);
         }
 
-        List<EventFullDto> eventFullDtoList = eventsList.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
+        List<EventFullDto> eventFullDtoList = eventsList.stream()
+                .map(EventMapper::toEventFullDto).collect(Collectors.toList());
         log.info("Got events, {}", eventFullDtoList);
         return eventFullDtoList;
     }
@@ -83,33 +75,23 @@ public class AdminEventsServiceImpl implements AdminEventsService {
     @Override
     public EventFullDto updateEvent(Long eventId, AdminUpdateEventRequest adminUpdateEventRequest) {
         Event event = findEvent(eventId);
-        if (adminUpdateEventRequest.getAnnotation() != null) {
-            event.setAnnotation(adminUpdateEventRequest.getAnnotation());
-        }
-        if (adminUpdateEventRequest.getParticipantLimit() != null) {
-            event.setParticipantLimit(adminUpdateEventRequest.getParticipantLimit());
-        }
+
+        adminUpdateEventRequest.getAnnotation().ifPresent(event::setAnnotation);
+        adminUpdateEventRequest.getParticipantLimit().ifPresent(event::setParticipantLimit);
+        adminUpdateEventRequest.getEventDate().ifPresent(s -> event.setEventDate(parseDateTime(s)));
+        adminUpdateEventRequest.getPaid().ifPresent(event::setPaid);
+        adminUpdateEventRequest.getCategoryId().ifPresent(s -> event.setCategory(findCategory(s)));
+        adminUpdateEventRequest.getDescription().ifPresent(event::setDescription);
+        adminUpdateEventRequest.getTitle().ifPresent(event::setTitle);
+
         if (adminUpdateEventRequest.getRequestModeration() != null) {
             event.setRequestModeration(adminUpdateEventRequest.getRequestModeration());
         }
-        if (adminUpdateEventRequest.getEventDate() != null) {
-            event.setEventDate(parseDateTime(adminUpdateEventRequest.getEventDate()));
-        }
+
         if (adminUpdateEventRequest.getLocationDto() != null) {
             event.setLocation(LocationMapper.toLocation(adminUpdateEventRequest.getLocationDto()));
         }
-        if (adminUpdateEventRequest.getPaid() != null) {
-            event.setPaid(adminUpdateEventRequest.getPaid());
-        }
-        if (adminUpdateEventRequest.getCategoryId() != null) {
-            event.setCategory(findCategory(adminUpdateEventRequest.getCategoryId()));
-        }
-        if (adminUpdateEventRequest.getDescription() != null) {
-            event.setDescription(adminUpdateEventRequest.getDescription());
-        }
-        if (adminUpdateEventRequest.getTitle() != null) {
-            event.setTitle(adminUpdateEventRequest.getTitle());
-        }
+
         EventFullDto eventFullDto = EventMapper.toEventFullDto(eventsRepository.save(event));
         log.info("Updated event, id={}", eventFullDto.getId());
         return eventFullDto;
@@ -145,12 +127,14 @@ public class AdminEventsServiceImpl implements AdminEventsService {
     private Event findEvent(Long id) {
         return eventsRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException(MessageFormat.format("{0}{1}", COMPILATION_NOT_FOUND_MESSAGE, id)));
+                .orElseThrow(() -> new NotFoundException(
+                        MessageFormat.format(PATTERN_TWO_ARGS, COMPILATION_NOT_FOUND_MESSAGE, id)));
     }
 
     private Category findCategory(Long id) {
         return categoriesRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException(MessageFormat.format("{0}{1}", CATEGORY_NOT_FOUND_MESSAGE, id)));
+                .orElseThrow(() -> new NotFoundException(
+                        MessageFormat.format(PATTERN_TWO_ARGS, CATEGORY_NOT_FOUND_MESSAGE, id)));
     }
 }

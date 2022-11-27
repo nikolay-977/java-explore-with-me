@@ -11,14 +11,14 @@ import ru.practicum.explorewithme.service.AdminUsersService;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/admin/users")
+@RequestMapping("/admin/users")
 @Slf4j
 @RequiredArgsConstructor
 public class AdminUsersController {
 
     private final AdminUsersService adminUsersService;
 
-    @GetMapping()
+    @GetMapping
     public List<UserDto> getUsers(@RequestParam(name = "ids", required = false) List<Long> ids,
                                   @RequestParam(name = "from", defaultValue = "0") Integer from,
                                   @RequestParam(name = "size", defaultValue = "10") Integer size) {
@@ -32,7 +32,7 @@ public class AdminUsersController {
         return adminUsersService.addUser(newUserRequest);
     }
 
-    @DeleteMapping(path = "/{userId}")
+    @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable Long userId) {
         log.info("Send request DELETE: delete users by id: {}", userId);
         adminUsersService.deleteUser(userId);

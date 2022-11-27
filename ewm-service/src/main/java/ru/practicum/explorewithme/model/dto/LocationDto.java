@@ -1,7 +1,8 @@
 package ru.practicum.explorewithme.model.dto;
 
-import com.sun.istack.NotNull;
 import lombok.*;
+
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter

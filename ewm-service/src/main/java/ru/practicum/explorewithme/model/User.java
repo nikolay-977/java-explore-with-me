@@ -14,16 +14,15 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 public class User {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(length = 200, nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(length = 200, nullable = false)
     private String email;
 }

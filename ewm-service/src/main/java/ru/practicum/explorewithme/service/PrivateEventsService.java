@@ -1,6 +1,5 @@
 package ru.practicum.explorewithme.service;
 
-
 import ru.practicum.explorewithme.model.dto.*;
 
 import java.util.List;

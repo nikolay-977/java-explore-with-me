@@ -29,6 +29,6 @@ public class Compilation {
     @Column(name = "is_pinned", nullable = false)
     private boolean pinned;
 
-    @Column(nullable = false)
+    @Column(length = 200, nullable = false)
     private String title;
 }

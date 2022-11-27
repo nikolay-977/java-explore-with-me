@@ -14,7 +14,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,7 +24,9 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public EndpointHit saveEndpointHit(EndpointHit endpointHit) {
-        return statsRepository.save(endpointHit);
+        EndpointHit endpointHitSaved = statsRepository.save(endpointHit);
+        log.info("Added endpointHit={}", endpointHitSaved);
+        return endpointHitSaved;
     }
 
     @Override
@@ -36,31 +37,28 @@ public class StatsServiceImpl implements StatsService {
         LocalDateTime endDateTime = LocalDateTime.parse(end, formatter);
 
         if (unique) {
-            if (uris.isPresent()) {
-                listEndpoint = statsRepository
-                        .searchUniqueEndpointHitByUri(uris.get(), startDateTime, endDateTime);
-            } else {
-                listEndpoint = statsRepository
-                        .searchUniqueEndpointHit(startDateTime, endDateTime);
-            }
+            listEndpoint = uris.isPresent() ?
+                    statsRepository
+                            .searchUniqueEndpointHitByUri(uris.get(), startDateTime, endDateTime)
+                    :
+                    statsRepository
+                            .searchUniqueEndpointHit(startDateTime, endDateTime);
+
         } else {
-            if (uris.isPresent()) {
-                listEndpoint = statsRepository
-                        .searchEndpointHitByUri(uris.get(), startDateTime, endDateTime);
-            } else {
-                listEndpoint = statsRepository
-                        .searchEndpointHit(startDateTime, endDateTime);
-            }
+            listEndpoint = uris.isPresent() ?
+                    statsRepository
+                            .searchEndpointHitByUri(uris.get(), startDateTime, endDateTime)
+                    :
+                    statsRepository
+                            .searchEndpointHit(startDateTime, endDateTime);
         }
 
         List<ViewStats> viewStatsList = new ArrayList<>();
 
         if (!listEndpoint.isEmpty()) {
-            viewStatsList = listEndpoint
-                    .stream()
-                    .map(ViewStatsMapper::toViewStats)
-                    .collect(Collectors.toList());
+            viewStatsList = ViewStatsMapper.viewStatsList(listEndpoint);
         }
+        log.info("Got viewStatsList={}", viewStatsList);
         return viewStatsList;
     }
 }

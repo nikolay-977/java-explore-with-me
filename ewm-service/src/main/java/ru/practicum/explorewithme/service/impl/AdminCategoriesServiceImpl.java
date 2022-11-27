@@ -51,7 +51,6 @@ public class AdminCategoriesServiceImpl implements AdminCategoriesService {
         log.info("Deleted category, id={}", catId);
     }
 
-    @Transactional(readOnly = true)
     private Category findCategory(Long id) {
         return categoriesRepository
                 .findById(id)

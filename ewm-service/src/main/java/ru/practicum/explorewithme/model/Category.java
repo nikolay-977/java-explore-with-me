@@ -20,6 +20,6 @@ public class Category {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(length = 200, nullable = false)
     private String name;
 }

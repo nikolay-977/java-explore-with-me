@@ -3,6 +3,8 @@ package ru.practicum.explorewithme.model.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.util.Optional;
+
 @Getter
 @Setter
 @ToString
@@ -10,15 +12,15 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdminUpdateEventRequest {
-    private String annotation;
-    private Boolean paid;
-    private String description;
+    private Optional<String> annotation;
+    private Optional<Boolean> paid;
+    private Optional<String> description;
     private Boolean requestModeration;
     @JsonProperty("location")
     private LocationDto locationDto;
     @JsonProperty("category")
-    private Long categoryId;
-    private String title;
-    private Long participantLimit;
-    private String eventDate;
+    private Optional<Long> categoryId;
+    private Optional<String> title;
+    private Optional<Long> participantLimit;
+    private Optional<String> eventDate;
 }

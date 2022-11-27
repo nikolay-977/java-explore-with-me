@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 public class NewUserRequest {
     @NotNull
     private String name;
-    @NotNull
     @Email
     private String email;
 }

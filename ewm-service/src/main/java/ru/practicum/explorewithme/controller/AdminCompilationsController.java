@@ -10,7 +10,7 @@ import ru.practicum.explorewithme.service.AdminCompilationsService;
 
 
 @RestController
-@RequestMapping(path = "/admin/compilations")
+@RequestMapping("/admin/compilations")
 @Slf4j
 @RequiredArgsConstructor
 public class AdminCompilationsController {

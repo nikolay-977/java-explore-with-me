@@ -9,7 +9,7 @@ import ru.practicum.explorewithme.service.PrivateUserRequestsService;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/users/{userId}/requests")
+@RequestMapping("/users/{userId}/requests")
 @Slf4j
 @RequiredArgsConstructor
 public class PrivateRequestsController {

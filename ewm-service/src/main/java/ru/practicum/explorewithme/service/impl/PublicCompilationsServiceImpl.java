@@ -29,12 +29,8 @@ public class PublicCompilationsServiceImpl implements PublicCompilationsService 
     @Override
     public List<CompilationDto> getCompilation(Boolean pinned, Integer from, Integer size) {
         final Pageable pageable = CustomPageRequest.of(from, size);
-        List<Compilation> compilationList;
-        if (pinned != null) {
-            compilationList = compilationsRepository.findAllByPinned(pinned, pageable);
-        } else {
-            compilationList = compilationsRepository.findAll(pageable).toList();
-        }
+        List<Compilation> compilationList = pinned != null ? compilationsRepository.findAllByPinned(pinned, pageable)
+                : compilationsRepository.findAll(pageable).toList();
         List<CompilationDto> compilationDtoList = CompilationMapper.toCompilationDtoList(compilationList);
         log.info("Got compilations={}", compilationDtoList);
         return compilationDtoList;

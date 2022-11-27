@@ -31,9 +31,9 @@ public class PrivateUserRequestsServiceImpl implements PrivateUserRequestsServic
 
     private final UsersRepository usersRepository;
     private final EventsRepository eventsRepository;
-
     private final RequestsRepository requestsRepository;
 
+    @Transactional
     @Override
     public List<ParticipationRequestDto> getUserRequests(Long userId) {
         List<ParticipationRequest> requestList = requestsRepository.findAllByRequesterId(userId);
@@ -43,7 +43,6 @@ public class PrivateUserRequestsServiceImpl implements PrivateUserRequestsServic
     }
 
     @Transactional
-
     @Override
     public ParticipationRequestDto addUserRequest(Long userId, Long eventId) {
         User user = findUser(userId);

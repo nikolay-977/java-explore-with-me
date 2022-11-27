@@ -10,14 +10,14 @@ import ru.practicum.explorewithme.service.AdminEventsService;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/admin/events")
+@RequestMapping("/admin/events")
 @Slf4j
 @RequiredArgsConstructor
 public class AdminEventsController {
 
     private final AdminEventsService adminEventsService;
 
-    @GetMapping()
+    @GetMapping
     public List<EventFullDto> getEvents(@RequestParam(name = "users", required = false) List<Long> users,
                                         @RequestParam(name = "states", required = false) List<String> states,
                                         @RequestParam(name = "categories", required = false) List<Long> categories,

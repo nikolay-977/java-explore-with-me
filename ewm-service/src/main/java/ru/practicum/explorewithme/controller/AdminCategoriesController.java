@@ -9,7 +9,7 @@ import ru.practicum.explorewithme.model.dto.NewCategoryDto;
 import ru.practicum.explorewithme.service.AdminCategoriesService;
 
 @RestController
-@RequestMapping(path = "/admin/categories")
+@RequestMapping("/admin/categories")
 @Slf4j
 @RequiredArgsConstructor
 public class AdminCategoriesController {

@@ -9,7 +9,7 @@ import ru.practicum.explorewithme.service.PublicCompilationsService;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/compilations")
+@RequestMapping("/compilations")
 @Slf4j
 @RequiredArgsConstructor
 public class PublicCompilationsController {

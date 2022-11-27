@@ -3,6 +3,8 @@ package ru.practicum.explorewithme.model.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.util.Optional;
+
 @Getter
 @Setter
 @ToString
@@ -11,12 +13,12 @@ import lombok.*;
 @AllArgsConstructor
 public class UpdateEventRequest {
     private Long eventId;
-    private String annotation;
-    private Boolean paid;
-    private String description;
+    private Optional<String> annotation;
+    private Optional<Boolean> paid;
+    private Optional<String> description;
     @JsonProperty("category")
-    private Long categoryId;
-    private String title;
-    private Long participantLimit;
-    private String eventDate;
+    private Optional<Long> categoryId;
+    private Optional<String> title;
+    private Optional<Long> participantLimit;
+    private Optional<String> eventDate;
 }

@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserMapper {
+    private UserMapper() {
+    }
+
     public static User toUser(UserDto userDto) {
         return User.builder()
                 .id(userDto.getId())

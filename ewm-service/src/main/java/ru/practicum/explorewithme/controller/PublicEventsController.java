@@ -9,21 +9,22 @@ import ru.practicum.explorewithme.service.PublicEventsService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "/events")
+@RequestMapping("/events")
 @Slf4j
 @RequiredArgsConstructor
 public class PublicEventsController {
     private final PublicEventsService publicEventsService;
 
     @GetMapping
-    public List<EventShortDto> getEvents(@RequestParam(name = "text", required = false) String text,
-                                         @RequestParam(name = "categories", required = false) List<Long> categories,
-                                         @RequestParam(name = "paid", required = false) Boolean paid,
-                                         @RequestParam(name = "rangeStart", required = false) String rangeStart,
-                                         @RequestParam(name = "rangeEnd", required = false) String rangeEnd,
-                                         @RequestParam(name = "onlyAvailable", required = false) Boolean onlyAvailable,
+    public List<EventShortDto> getEvents(@RequestParam(name = "text", required = false) Optional<String> text,
+                                         @RequestParam(name = "categories", required = false) Optional<List<Long>> categories,
+                                         @RequestParam(name = "paid", required = false) Optional<Boolean> paid,
+                                         @RequestParam(name = "rangeStart", required = false) Optional<String> rangeStart,
+                                         @RequestParam(name = "rangeEnd", required = false) Optional<String> rangeEnd,
+                                         @RequestParam(name = "onlyAvailable", required = false) Optional<Boolean> onlyAvailable,
                                          @RequestParam(name = "sort", defaultValue = "VIEWS") String sort,
                                          @RequestParam(name = "from", defaultValue = "0") Integer from,
                                          @RequestParam(name = "size", defaultValue = "10") Integer size,

@@ -10,6 +10,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CompilationMapper {
+
+    private CompilationMapper() {
+    }
+
     public static Compilation toCompilation(NewCompilationDto newCompilationDto, Set<Event> events) {
         return Compilation.builder()
                 .pinned(newCompilationDto.getPinned())

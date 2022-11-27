@@ -21,7 +21,7 @@ public class Event {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(length = 1000, nullable = false)
     private String annotation;
 
     @ManyToOne
@@ -31,10 +31,12 @@ public class Event {
     @Column(name = "confirmed_requests")
     @Builder.Default
     private Long confirmedRequests = 0L;
+
     @Column(name = "created_on")
     @Builder.Default
     private LocalDateTime createdOn = LocalDateTime.now();
-    @Column(nullable = false)
+
+    @Column(length = 3000, nullable = false)
     private String description;
 
     @Column(name = "event_date", nullable = false)
@@ -58,14 +60,15 @@ public class Event {
     @Column(name = "published_on")
     private LocalDateTime publishedOn;
 
-    @Column(name = "is_request_moderation", nullable = false)
+    @Column(name = "is_request_moderation")
     private Boolean requestModeration;
 
+    @Column(length = 50)
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private State state = PENDING;
 
-    @Column(nullable = false)
+    @Column(length = 200, nullable = false)
     private String title;
 
     @Builder.Default

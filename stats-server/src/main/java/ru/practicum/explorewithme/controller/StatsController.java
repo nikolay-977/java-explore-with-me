@@ -11,21 +11,19 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping
 @Slf4j
 @RequiredArgsConstructor
 public class StatsController {
 
     private final StatsService statsService;
 
-    @PostMapping(path = "/hit")
+    @PostMapping("/hit")
     public EndpointHit saveEndpointHit(@RequestBody EndpointHit endpointHit) {
         log.info("Send request POST: save endpointHit={}", endpointHit);
         return statsService.saveEndpointHit(endpointHit);
-
     }
 
-    @GetMapping(path = "/stats")
+    @GetMapping("/stats")
     public List<ViewStats> getViewStats(@RequestParam(name = "start") String start,
                                         @RequestParam(name = "end") String end,
                                         @RequestParam(name = "uris", required = false) Optional<List<String>> uris,

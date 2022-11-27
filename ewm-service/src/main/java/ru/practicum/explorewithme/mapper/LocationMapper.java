@@ -4,6 +4,10 @@ import ru.practicum.explorewithme.model.Location;
 import ru.practicum.explorewithme.model.dto.LocationDto;
 
 public class LocationMapper {
+
+    private LocationMapper() {
+    }
+
     public static Location toLocation(LocationDto locationDto) {
         return Location.builder()
                 .id(locationDto.getId())

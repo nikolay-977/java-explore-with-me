@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
 
 public class EventMapper {
 
+    private EventMapper() {
+    }
+
     public static Event toEvent(EventFullDto eventFullDto) {
         return Event.builder()
                 .id(eventFullDto.getId())
