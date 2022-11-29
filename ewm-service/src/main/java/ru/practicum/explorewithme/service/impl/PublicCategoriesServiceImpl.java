@@ -16,8 +16,7 @@ import ru.practicum.explorewithme.utils.CustomPageRequest;
 import java.text.MessageFormat;
 import java.util.List;
 
-import static ru.practicum.explorewithme.utils.Constants.CATEGORIES_NOT_FOUND_MESSAGE;
-import static ru.practicum.explorewithme.utils.Constants.CATEGORY_NOT_FOUND_MESSAGE;
+import static ru.practicum.explorewithme.utils.Constants.*;
 
 @Slf4j
 @Service
@@ -44,7 +43,7 @@ public class PublicCategoriesServiceImpl implements PublicCategoriesService {
     public CategoryDto getCategoryById(Long catId) {
         Category category = categoriesRepository
                 .findById(catId)
-                .orElseThrow(() -> new NotFoundException(MessageFormat.format("{0}{1}", CATEGORY_NOT_FOUND_MESSAGE, catId)));
+                .orElseThrow(() -> new NotFoundException(MessageFormat.format(PATTERN_TWO_ARGS, CATEGORY_NOT_FOUND_MESSAGE, catId)));
         CategoryDto categoryDto = CategoryMapper.toCategoryDto(category);
         log.info("Got category={}", categoryDto);
         return categoryDto;

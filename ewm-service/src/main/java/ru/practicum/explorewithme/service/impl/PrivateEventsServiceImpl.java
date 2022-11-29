@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.explorewithme.exception.BadRequestException;
+import ru.practicum.explorewithme.exception.ForbiddenException;
 import ru.practicum.explorewithme.exception.NotFoundException;
 import ru.practicum.explorewithme.mapper.EventMapper;
 import ru.practicum.explorewithme.mapper.LocationMapper;
@@ -49,6 +51,16 @@ public class PrivateEventsServiceImpl implements PrivateEventsService {
         findUser(userId);
 
         Event event = findEvent(updateEventRequest.getEventId());
+        if (!event.getInitiator().getId().equals(userId)) {
+            throw new ForbiddenException(USER_IS_INITIATOR);
+        }
+        if (event.getState().equals(PUBLISHED)) {
+            throw new BadRequestException(IS_PUBLISHED);
+        }
+        if (event.getState().equals(CANCELED)) {
+            event.setRequestModeration(true);
+        }
+
         updateEventRequest.getCategoryId().ifPresent(s -> event.setCategory(findCategory(s)));
         updateEventRequest.getEventDate().ifPresent(s -> event.setEventDate(DateHelper.parseDateTime(s)));
         updateEventRequest.getAnnotation().ifPresent(event::setAnnotation);

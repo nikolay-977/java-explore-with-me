@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static ru.practicum.explorewithme.utils.Constants.COMPILATION_NOT_FOUND_MESSAGE;
+import static ru.practicum.explorewithme.utils.Constants.PATTERN_TWO_ARGS;
 
 @Slf4j
 @Service
@@ -93,12 +94,12 @@ public class AdminCompilationsServiceImpl implements AdminCompilationsService {
     private Compilation findCompilation(Long id) {
         return compilationsRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException(MessageFormat.format("{0}{1}", COMPILATION_NOT_FOUND_MESSAGE, id)));
+                .orElseThrow(() -> new NotFoundException(MessageFormat.format(PATTERN_TWO_ARGS, COMPILATION_NOT_FOUND_MESSAGE, id)));
     }
 
     private Event findEvent(Long id) {
         return eventsRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException(MessageFormat.format("{0}{1}", COMPILATION_NOT_FOUND_MESSAGE, id)));
+                .orElseThrow(() -> new NotFoundException(MessageFormat.format(PATTERN_TWO_ARGS, COMPILATION_NOT_FOUND_MESSAGE, id)));
     }
 }

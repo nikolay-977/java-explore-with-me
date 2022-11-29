@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class EndpointHitDto {
     private Long id;
-    @Builder.Default
-    private String app = "ewm-service";
+    private String app;
     private String uri;
     private String ip;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

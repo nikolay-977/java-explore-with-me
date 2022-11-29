@@ -7,23 +7,24 @@ import javax.persistence.*;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "users")
+@Table(name = "friendship")
 @Getter
 @Setter
 @ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-public class User {
+public class Friendship {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(length = 200, nullable = false)
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(length = 200, nullable = false)
-    private String email;
+    @ManyToOne
+    @JoinColumn(name = "friend_id")
+    private User friend;
 }
