@@ -42,9 +42,9 @@ CREATE TABLE IF NOT EXISTS events
     title                 VARCHAR(200)                            NOT NULL,
     views                 BIGINT                                  NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (category_id) REFERENCES categories (id),
-    FOREIGN KEY (initiator_id) REFERENCES users (id),
-    FOREIGN KEY (location_id) REFERENCES locations (id)
+    FOREIGN KEY (category_id) REFERENCES categories (id) ON DELETE CASCADE,
+    FOREIGN KEY (initiator_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (location_id) REFERENCES locations (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS compilations
@@ -60,8 +60,8 @@ CREATE TABLE IF NOT EXISTS compilations_events
 (
     compilation_id BIGINT NOT NULL,
     event_id       BIGINT NOT NULL,
-    FOREIGN KEY (compilation_id) REFERENCES compilations (id),
-    FOREIGN KEY (event_id) REFERENCES events (id)
+    FOREIGN KEY (compilation_id) REFERENCES compilations (id) ON DELETE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS requests
@@ -72,6 +72,6 @@ CREATE TABLE IF NOT EXISTS requests
     requester_id BIGINT                                  NOT NULL,
     status       VARCHAR(200)                            NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (event_id) REFERENCES events (id),
-    FOREIGN KEY (requester_id) REFERENCES users (id)
+    FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
+    FOREIGN KEY (requester_id) REFERENCES users (id) ON DELETE CASCADE
 );

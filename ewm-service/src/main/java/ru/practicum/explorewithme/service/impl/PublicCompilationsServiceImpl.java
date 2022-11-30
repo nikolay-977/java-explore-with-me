@@ -17,6 +17,7 @@ import java.text.MessageFormat;
 import java.util.List;
 
 import static ru.practicum.explorewithme.utils.Constants.COMPILATION_NOT_FOUND_MESSAGE;
+import static ru.practicum.explorewithme.utils.Constants.PATTERN_TWO_ARGS;
 
 @Slf4j
 @Service
@@ -40,7 +41,7 @@ public class PublicCompilationsServiceImpl implements PublicCompilationsService 
     @Override
     public CompilationDto getCompilationById(Long compId) {
         Compilation compilation = compilationsRepository.findById(compId).orElseThrow(() ->
-                new NotFoundException(MessageFormat.format("{0}{1}", COMPILATION_NOT_FOUND_MESSAGE, compId)));
+                new NotFoundException(MessageFormat.format(PATTERN_TWO_ARGS, COMPILATION_NOT_FOUND_MESSAGE, compId)));
         CompilationDto compilationDto = CompilationMapper.toCompilationDto(compilation);
         log.info("Got compilations={}", compilationDto);
         return compilationDto;
