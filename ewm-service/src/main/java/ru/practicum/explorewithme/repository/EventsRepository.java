@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.explorewithme.model.Event;
 import ru.practicum.explorewithme.model.State;
+import ru.practicum.explorewithme.model.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.List;
 public interface EventsRepository extends JpaRepository<Event, Long> {
 
     List<Event> findEventsByInitiatorId(Long initiatorId, Pageable pageable);
+
+    List<Event> findEventsByInitiatorIn(List<User> initiators, Pageable pageable);
 
     List<Event> findEventsByIdIn(List<Long> ids);
 

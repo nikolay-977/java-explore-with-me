@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.explorewithme.exception.BadRequestException;
+import ru.practicum.explorewithme.exception.ForbiddenException;
 import ru.practicum.explorewithme.exception.NotFoundException;
 import ru.practicum.explorewithme.mapper.ParticipationRequestMapper;
 import ru.practicum.explorewithme.model.Event;
 import ru.practicum.explorewithme.model.ParticipationRequest;
+import ru.practicum.explorewithme.model.State;
 import ru.practicum.explorewithme.model.User;
 import ru.practicum.explorewithme.model.dto.ParticipationRequestDto;
 import ru.practicum.explorewithme.repository.EventsRepository;
@@ -19,10 +22,8 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static ru.practicum.explorewithme.model.State.CANCELED;
-import static ru.practicum.explorewithme.model.State.CONFIRMED;
-import static ru.practicum.explorewithme.utils.Constants.COMPILATION_NOT_FOUND_MESSAGE;
-import static ru.practicum.explorewithme.utils.Constants.USER_NOT_FOUND_MESSAGE;
+import static ru.practicum.explorewithme.model.State.*;
+import static ru.practicum.explorewithme.utils.Constants.*;
 
 @Slf4j
 @Service
@@ -48,11 +49,31 @@ public class PrivateUserRequestsServiceImpl implements PrivateUserRequestsServic
         User user = findUser(userId);
         Event event = findEvent(eventId);
 
-        ParticipationRequest participationRequest = ParticipationRequest.builder()
-                .requester(user)
-                .created(LocalDateTime.now())
-                .event(event)
-                .build();
+        if (event.getInitiator().getId().equals(userId)) {
+            throw new ForbiddenException(USER_IS_INITIATOR);
+        }
+
+        if (event.getState() != State.PUBLISHED) {
+            throw new ForbiddenException(ACCESS_DENIED);
+        }
+
+        if (event.getParticipantLimit() != 0
+                && (event.getParticipantLimit() - event.getConfirmedRequests() <= 0)) {
+            throw new BadRequestException("The participation limit has been reached");
+        }
+
+        ParticipationRequest participationRequest = new ParticipationRequest();
+        if (!event.getRequestModeration()) {
+            participationRequest.setStatus(CONFIRMED);
+            event.setConfirmedRequests(event.getConfirmedRequests() + 1L);
+            eventsRepository.save(event);
+        } else {
+            participationRequest.setStatus(PENDING);
+        }
+
+        participationRequest.setRequester(user);
+        participationRequest.setCreated(LocalDateTime.now());
+        participationRequest.setEvent(event);
 
         ParticipationRequestDto participationRequestDto = ParticipationRequestMapper.toParticipationRequestDto(requestsRepository.save(participationRequest));
         log.info("Added request={}", participationRequestDto);
@@ -73,12 +94,12 @@ public class PrivateUserRequestsServiceImpl implements PrivateUserRequestsServic
     private Event findEvent(Long id) {
         return eventsRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException(MessageFormat.format("{0}{1}", COMPILATION_NOT_FOUND_MESSAGE, id)));
+                .orElseThrow(() -> new NotFoundException(MessageFormat.format(PATTERN_TWO_ARGS, COMPILATION_NOT_FOUND_MESSAGE, id)));
     }
 
     private User findUser(Long id) {
         return usersRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException(MessageFormat.format("{0}{1}", USER_NOT_FOUND_MESSAGE, id)));
+                .orElseThrow(() -> new NotFoundException(MessageFormat.format(PATTERN_TWO_ARGS, USER_NOT_FOUND_MESSAGE, id)));
     }
 }

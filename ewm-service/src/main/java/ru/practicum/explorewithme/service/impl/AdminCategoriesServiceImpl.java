@@ -15,6 +15,7 @@ import ru.practicum.explorewithme.service.AdminCategoriesService;
 import java.text.MessageFormat;
 
 import static ru.practicum.explorewithme.utils.Constants.CATEGORY_NOT_FOUND_MESSAGE;
+import static ru.practicum.explorewithme.utils.Constants.PATTERN_TWO_ARGS;
 
 @Slf4j
 @Service
@@ -54,6 +55,6 @@ public class AdminCategoriesServiceImpl implements AdminCategoriesService {
     private Category findCategory(Long id) {
         return categoriesRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException(MessageFormat.format("{0}{1}", CATEGORY_NOT_FOUND_MESSAGE, id)));
+                .orElseThrow(() -> new NotFoundException(MessageFormat.format(PATTERN_TWO_ARGS, CATEGORY_NOT_FOUND_MESSAGE, id)));
     }
 }
