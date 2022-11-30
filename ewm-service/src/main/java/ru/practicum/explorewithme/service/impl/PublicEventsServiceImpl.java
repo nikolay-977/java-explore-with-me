@@ -49,59 +49,10 @@ public class PublicEventsServiceImpl implements PublicEventsService {
                                          Integer from,
                                          Integer size,
                                          HttpServletRequest request) {
-        List<Event> eventList = new ArrayList<>();
         final Pageable pageable = CustomPageRequest.of(from, size);
 
-        if (text.isPresent()) {
-            switch (SortType.valueOf(sort)) {
-                case EVENT_DATE: {
-                    eventList = (categories.isPresent()
-                            && paid.isPresent()
-                            && rangeStart.isPresent()
-                            && rangeEnd.isPresent())
-                            ? eventsRepository.searchEventsByTextAndCategoriesAndPaidBySortByEventDay(
-                            text.get(),
-                            categories.get(),
-                            paid.get(),
-                            parseDateTime(rangeStart.get()),
-                            parseDateTime(rangeEnd.get()),
-                            pageable)
-                            : eventsRepository.searchEventsByTextSortByEvents(text.get(), pageable);
-                    break;
-                }
-                case VIEWS: {
-                    eventList = (categories.isPresent()
-                            && paid.isPresent()
-                            && rangeStart.isPresent()
-                            && rangeEnd.isPresent())
-                            ? eventsRepository.searchEventsByTextAndCategoriesAndPaidBySortByViews(
-                            text.get(),
-                            categories.get(),
-                            paid.get(),
-                            parseDateTime(rangeStart.get()),
-                            parseDateTime(rangeEnd.get()),
-                            pageable)
-                            : eventsRepository.searchEventsByTextSortByViews(text.get(), pageable);
-                    break;
-                }
-            }
-        } else {
-            eventList = eventsRepository.findAll(pageable).toList();
-        }
-
-        if (paid.isPresent()) {
-            eventList = eventList
-                    .stream()
-                    .filter(event -> event.getPaid().equals(paid.get()))
-                    .collect(Collectors.toList());
-        }
-
-        if (onlyAvailable.isPresent() && onlyAvailable.get()) {
-            eventList = eventList
-                    .stream()
-                    .filter(event -> event.getParticipantLimit() > 0L)
-                    .collect(Collectors.toList());
-        }
+        List<Event> eventList = getEventList(text, categories, paid, rangeStart, rangeEnd, onlyAvailable,
+                SortType.valueOf(sort), pageable);
 
         List<EventShortDto> eventShortDtoList = EventMapper.toEventShortDtoList(eventList);
         log.info("Got events={}", eventShortDtoList);
@@ -131,5 +82,70 @@ public class PublicEventsServiceImpl implements PublicEventsService {
         return eventsRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException(MessageFormat.format(PATTERN_TWO_ARGS, COMPILATION_NOT_FOUND_MESSAGE, id)));
+    }
+
+    private List<Event> getEventList(Optional<String> text,
+                                     Optional<List<Long>> categories,
+                                     Optional<Boolean> paid,
+                                     Optional<String> rangeStart,
+                                     Optional<String> rangeEnd,
+                                     Optional<Boolean> onlyAvailable,
+                                     SortType sort,
+                                     Pageable pageable) {
+
+        List<Event> eventList = new ArrayList<>();
+
+        if (text.isPresent()) {
+            switch (sort) {
+                case EVENT_DATE: {
+                    eventList = categories.isPresent()
+                            && paid.isPresent()
+                            && rangeStart.isPresent()
+                            && rangeEnd.isPresent()
+                            ? eventsRepository.searchEventsByTextAndCategoriesAndPaidBySortByEventDay(
+                            text.get(),
+                            categories.get(),
+                            paid.get(),
+                            parseDateTime(rangeStart.get()),
+                            parseDateTime(rangeEnd.get()),
+                            pageable)
+                            : eventsRepository.searchEventsByTextSortByEvents(text.get(), pageable);
+                    break;
+                }
+                case VIEWS: {
+                    eventList = categories.isPresent()
+                            && paid.isPresent()
+                            && rangeStart.isPresent()
+                            && rangeEnd.isPresent()
+                            ? eventsRepository.searchEventsByTextAndCategoriesAndPaidBySortByViews(
+                            text.get(),
+                            categories.get(),
+                            paid.get(),
+                            parseDateTime(rangeStart.get()),
+                            parseDateTime(rangeEnd.get()),
+                            pageable)
+                            : eventsRepository.searchEventsByTextSortByViews(text.get(), pageable);
+                    break;
+                }
+            }
+        } else {
+            eventList = eventsRepository.findAll(pageable).toList();
+        }
+
+        if (paid.isPresent()) {
+            eventList = eventList
+                    .stream()
+                    .filter(event -> event.getPaid().equals(paid.get()))
+                    .collect(Collectors.toList());
+        }
+
+        if (onlyAvailable.isPresent() && onlyAvailable.get()) {
+            eventList = eventList
+                    .stream()
+                    .filter(event -> event.getParticipantLimit() > 0L)
+                    .collect(Collectors.toList());
+        }
+
+        return eventList;
     }
 }
