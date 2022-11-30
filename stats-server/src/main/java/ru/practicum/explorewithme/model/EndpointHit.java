@@ -22,20 +22,17 @@ public class EndpointHit {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(length = 200)
+    @Column(name = "app", length = 200)
     private String app;
 
-    @Column(length = 200)
+    @Column(name = "uri", length = 200)
     private String uri;
 
-    @Column(length = 200)
+    @Column(name = "ip", length = 200)
     private String ip;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Builder.Default
+    @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp = LocalDateTime.now();
-
-    @Builder.Default
-    private Long hits = 1L;
-
 }

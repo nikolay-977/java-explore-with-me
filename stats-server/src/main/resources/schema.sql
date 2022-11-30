@@ -5,6 +5,5 @@ CREATE TABLE IF NOT EXISTS stats
     uri       VARCHAR(200)                            NOT NULL,
     ip        VARCHAR(200)                            NOT NULL,
     timestamp TIMESTAMP                               NOT NULL,
-    hits      BIGINT,
     CONSTRAINT pk_stat PRIMARY KEY (id)
 );

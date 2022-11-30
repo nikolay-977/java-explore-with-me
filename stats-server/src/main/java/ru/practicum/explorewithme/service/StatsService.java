@@ -1,13 +1,12 @@
 package ru.practicum.explorewithme.service;
 
-import ru.practicum.explorewithme.model.EndpointHit;
-import ru.practicum.explorewithme.model.ViewStats;
+import ru.practicum.explorewithme.model.dto.EndpointHitDto;
+import ru.practicum.explorewithme.model.dto.ViewStatsDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface StatsService {
-    EndpointHit saveEndpointHit(EndpointHit endpointHit);
+    EndpointHitDto saveEndpointHit(EndpointHitDto endpointHitDto);
 
-    List<ViewStats> getViewStats(String start, String end, Optional<List<String>> uris, Boolean unique);
+    List<ViewStatsDto> getViewStats(String start, String end, List<String> uris, Boolean unique);
 }
